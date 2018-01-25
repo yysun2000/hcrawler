@@ -20,7 +20,6 @@ const extract = hcrawler.extract;
 const output = hcrawler.output;
 
 
-
 const naver = {
   url : "https://search.shopping.naver.com/best100v2/main.nhn",
   server : {
@@ -28,10 +27,11 @@ const naver = {
     encoding : null
   },
   query : "#popular_srch_lst > li .txt",
-  callback : function(data){
+  callback : function(data,idx){
     return {
       link : "https://search.shopping.naver.com/search/all.nhn?query="+encodeURI(data.text())+"&cat_id=&frm=NVSHATC",
-      name : data.text()
+      name : data.text(),
+      rank : idx,
     }
   }
 }
@@ -45,7 +45,8 @@ app.listen(7005,(req,res) => {
     .then(jquerylize)
     .then(extract)
     .then(output)
-    .then(response);
+    .then(response)
+    .then(hdatamanager.commit);
 });
 
 
